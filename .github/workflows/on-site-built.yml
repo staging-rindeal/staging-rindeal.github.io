@@ -22,7 +22,7 @@ jobs:
     
     - name: Download artifact
       if: github.event_name == 'repository_dispatch'
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path:         ${{ steps.setup.outputs.site_data_dir }}
         repository:   ${{ github.event.client_payload.artifact.repo   }}
