@@ -18,37 +18,37 @@ jobs:
       run: |
         echo "site_data_dir=${GITHUB_WORKSPACE}/site-data" >> $GITHUB_OUTPUT
         
-        sudo apt-get install -y libarchive-tools
+#        sudo apt-get install -y libarchive-tools
     
-#    - name: Download artifact
-#      if: github.event_name == 'repository_dispatch'
-#      uses: actions/download-artifact@v3
-#      with:
-#        name: ${{ github.event.client_payload.artifact_id }}
-#        path: site-data
-#        github-token: ${{ env.CODE_ARTIFACTS_TOKEN }}
-#        repository: ${{ github.event.client_payload.artifact_repo }}
-#        run-id: ${{ github.event.client_payload.run_id }}
-
     - name: Download artifact
-      id: code-artifact
       if: github.event_name == 'repository_dispatch'
-      env:
-        CLIENT_PAYLOAD: ${{ toJSON(github.event.client_payload) }}
-        CODE_ARTIFACT_ID: ${{ github.event.client_payload.artifact.id }}
-        CODE_ARTIFACT_REPO: ${{ github.event.client_payload.artifact.repo }}
-        CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
-        SITE_DATA_DIR: ${{ steps.setup.outputs.site_data_dir }}
-      run: |
-        set -xeuo pipefail
+      uses: actions/download-artifact@v3
+      with:
+        path:         ${{ steps.setup.outputs.site_data_dir }}
+        repository:   ${{ github.event.client_payload.artifact.repo   }}
+        run-id:       ${{ github.event.client_payload.artifact.run_id }}
+        name:         ${{ github.event.client_payload.artifact.name   }}
+        github-token: ${{ env.CODE_ARTIFACT_TOKEN }}
 
-        mkdir -vp "${SITE_DATA_DIR}"
-        curl --fail -L \
-          -H "Accept: application/vnd.github+json" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          -H "Authorization: Bearer ${CODE_ARTIFACT_TOKEN}" \
-          "https://api.github.com/repos/${CODE_ARTIFACT_REPO}/actions/artifacts/${CODE_ARTIFACT_ID}/zip" \
-          -o - | bsdtar -xf- -C "${SITE_DATA_DIR}"
+#    - name: Download artifact
+#      id: code-artifact
+#      if: github.event_name == 'repository_dispatch'
+#      env:
+#        CLIENT_PAYLOAD: ${{ toJSON(github.event.client_payload) }}
+#        CODE_ARTIFACT_ID: ${{ github.event.client_payload.artifact.id }}
+#        CODE_ARTIFACT_REPO: ${{ github.event.client_payload.artifact.repo }}
+#        CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
+#        SITE_DATA_DIR: ${{ steps.setup.outputs.site_data_dir }}
+#      run: |
+#        set -xeuo pipefail
+#
+#        mkdir -vp "${SITE_DATA_DIR}"
+#        curl --fail -L \
+#          -H "Accept: application/vnd.github+json" \
+#          -H "X-GitHub-Api-Version: 2022-11-28" \
+#          -H "Authorization: Bearer ${CODE_ARTIFACT_TOKEN}" \
+#          "https://api.github.com/repos/${CODE_ARTIFACT_REPO}/actions/artifacts/${CODE_ARTIFACT_ID}/zip" \
+#          -o - | bsdtar -xf- -C "${SITE_DATA_DIR}"
 
     - name: Upload artifact
       id: artifact
