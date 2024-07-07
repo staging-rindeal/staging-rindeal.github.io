@@ -14,7 +14,10 @@ jobs:
     steps:
 
     - name: Setup
+      id: setup
       run: |
+        echo "site_data_dir=${GITHUB_WORKSPACE}/site-data" >> $GITHUB_OUTPUT
+        
         sudo apt-get install -y libarchive-tools
     
 #    - name: Download artifact
@@ -34,21 +37,24 @@ jobs:
         CODE_ARTIFACT_ID: ${{ github.event.client_payload.artifact.id }}
         CODE_ARTIFACT_REPO: ${{ github.event.client_payload.artifact.repo }}
         CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
+        SITE_DATA_PATH: ${{ steps.setup.outputs.site_data_dir }}
       run: |
         set -xeuo pipefail
+
+        mkdir -vp "${SITE_DIR_PATH}"
         curl --fail -L \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           -H "Authorization: Bearer ${CODE_ARTIFACT_TOKEN}" \
           "https://api.github.com/repos/${CODE_ARTIFACT_REPO}/actions/artifacts/${CODE_ARTIFACT_ID}/zip" \
-          -o - | bsdtar -xf- -C site-data
+          -o - | bsdtar -xf- -C "${SITE_DIR_PATH}"
 
     - name: Upload artifact
       id: artifact
       uses: actions/upload-artifact@v4
       with:
         name: site-data
-        path: site-data
+        path: ${{ steps.setup.outputs.site_data_dir }}
 
     - name: Trigger tests
       uses: peter-evans/repository-dispatch@v3
