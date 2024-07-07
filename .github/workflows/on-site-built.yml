@@ -34,6 +34,7 @@ jobs:
       id: code-artifact
       if: github.event_name == 'repository_dispatch'
       env:
+        CLIENT_PAYLOAD: ${{ github.event.client_payload }}
         CODE_ARTIFACT_ID: ${{ github.event.client_payload.artifact.id }}
         CODE_ARTIFACT_REPO: ${{ github.event.client_payload.artifact.repo }}
         CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
