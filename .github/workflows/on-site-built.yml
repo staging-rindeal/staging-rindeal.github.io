@@ -26,14 +26,15 @@ jobs:
       id: code-artifact
       if: github.event_name == 'repository_dispatch'
       env:
-        CODE_ARTIFACT_URL: ${{ github.event.client_payload.artifact.url }}
+        CODE_ARTIFACT_ID: ${{ github.event.client_payload.artifact.id }}
+        CODE_ARTIFACT_REPO: ${{ github.event.client_payload.artifact.repo }}
         CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
       run: |
         set -xeuo pipefail
         curl -v --fail -L \
           -H "Authorization: Bearer ${CODE_ARTIFACT_TOKEN}" \
           -H "Accept: application/vnd.github.v3+json" \
-          "${CODE_ARTIFACT_URL}" \
+          "https://api.github.com/repos/${CODE_ARTIFACT_REPO}/actions/artifacts/${CODE_ARTIFACT_ID}" \
           -o artifact.zip
         unzip artifact.zip -d site-data
 
