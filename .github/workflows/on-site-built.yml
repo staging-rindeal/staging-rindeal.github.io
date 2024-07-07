@@ -12,6 +12,10 @@ jobs:
         shell: bash
 
     steps:
+    - name: Setup
+      run: |
+        sudo apt install -y bsdtar
+    
 #    - name: Download artifact
 #      if: github.event_name == 'repository_dispatch'
 #      uses: actions/download-artifact@v3
