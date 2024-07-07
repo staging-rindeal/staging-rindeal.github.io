@@ -29,8 +29,9 @@ jobs:
         CODE_ARTIFACT_URL: ${{ github.event.client_payload.artifact.url }}
         CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
       run: |
+        set -xeuo pipefail
         curl -L \
-          -H "Authorization: token ${CODE_ARTIFACTS_TOKEN}" \
+          -H "Authorization: token ${CODE_ARTIFACT_TOKEN}" \
           -H "Accept: application/vnd.github.v3+json" \
           "${CODE_ARTIFACT_URL}" \
           -o artifact.zip
