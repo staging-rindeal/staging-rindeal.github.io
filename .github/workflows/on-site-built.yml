@@ -31,7 +31,7 @@ jobs:
       run: |
         set -xeuo pipefail
         curl -v -L \
-          -H "Authorization: token ${CODE_ARTIFACT_TOKEN}" \
+          -H "Authorization: Bearer ${CODE_ARTIFACT_TOKEN}" \
           -H "Accept: application/vnd.github.v3+json" \
           "${CODE_ARTIFACT_URL}" \
           -o artifact.zip
