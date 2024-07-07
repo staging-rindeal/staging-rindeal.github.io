@@ -35,9 +35,8 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           -H "Authorization: Bearer ${CODE_ARTIFACT_TOKEN}" \
-          "https://api.github.com/repos/${CODE_ARTIFACT_REPO}/actions/artifacts/${CODE_ARTIFACT_ID}" \
-          -o artifact.zip
-        unzip artifact.zip -d site-data
+          "https://api.github.com/repos/${CODE_ARTIFACT_REPO}/actions/artifacts/${CODE_ARTIFACT_ID}/zip" \
+          -o - | bsdtar -xf- -C site-data
 
     - name: Upload artifact
       id: artifact
