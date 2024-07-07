@@ -30,7 +30,7 @@ jobs:
         CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
       run: |
         set -xeuo pipefail
-        curl -L \
+        curl -v -L \
           -H "Authorization: token ${CODE_ARTIFACT_TOKEN}" \
           -H "Accept: application/vnd.github.v3+json" \
           "${CODE_ARTIFACT_URL}" \
