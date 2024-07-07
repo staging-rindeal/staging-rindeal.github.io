@@ -35,7 +35,7 @@ jobs:
         CODE_ARTIFACT_TOKEN: ${{ secrets.CODE_ARTIFACT_TOKEN }}
       run: |
         set -xeuo pipefail
-        curl -v --fail -L \
+        curl --fail -L \
           -H "Accept: application/vnd.github+json" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           -H "Authorization: Bearer ${CODE_ARTIFACT_TOKEN}" \
