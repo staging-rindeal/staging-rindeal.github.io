@@ -70,6 +70,6 @@ jobs:
               "id":     ${{ toJSON(steps.artifact.outputs.artifact-id) }},
               "url":    ${{ toJSON(steps.artifact.outputs.artifact-url) }},
               "repo":   ${{ toJSON(github.repository) }},
-              "run_id": ${{ toJSON(github.run_id) }},
-            },
+              "run_id": ${{ toJSON(github.run_id) }}
+            }
           }          
