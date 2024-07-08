@@ -14,20 +14,20 @@ jobs:
     steps:
 
     - name: Setup
-      id: setup
+      id: SETUP
       run: |
-        echo "site_data_dir=${GITHUB_WORKSPACE}/site-data" >> $GITHUB_OUTPUT
+        echo "SITE_DATA_DIR=${GITHUB_WORKSPACE}/site-data" >> $GITHUB_OUTPUT
         
 #        sudo apt-get install -y libarchive-tools
     
     - name: Download artifact
+      id: DOWNLOAD
       if: github.event_name == 'repository_dispatch'
       uses: actions/download-artifact@v4
       with:
-        path:         ${{ steps.setup.outputs.site_data_dir }}
-        repository:   ${{ github.event.client_payload.artifact.repo   }}
-        run-id:       ${{ github.event.client_payload.artifact.run_id }}
-        name:         ${{ github.event.client_payload.artifact.name   }}
+        repository:   ${{ github.event.client_payload.ARTIFACT.WORKFLOW_RUN.REPOSITORY_FULL_NAME }}
+        run-id:       ${{ github.event.client_payload.ARTIFACT.WORKFLOW_RUN.ID }}
+        name:         ${{ github.event.client_payload.ARTIFACT.NAME   }}
         github-token: ${{ env.CODE_ARTIFACT_TOKEN }}
 
 #    - name: Download artifact
@@ -51,11 +51,11 @@ jobs:
 #          -o - | bsdtar -xf- -C "${SITE_DATA_DIR}"
 
     - name: Upload artifact
-      id: artifact
-      uses: actions/upload-artifact@v4
+      id: UPLOAD
+      uses: actions-rindeal/upload-artifact@v4
       with:
-        name: site-data
-        path: ${{ steps.setup.outputs.site_data_dir }}
+        name: ${{ steps.DOWNLOAD.outputs.ARTIFACT.NAME }}
+        path: ${{ steps.DOWNLOAD.outputs.ARTIFACT.NAME }}.tar
 
     - name: Trigger tests
       uses: peter-evans/repository-dispatch@v3
@@ -66,10 +66,5 @@ jobs:
         client-payload: |-
           {
             "environment": ${{ toJSON(github.event.client_payload.environment) }},
-            "artifact": {
-              "id":     ${{ toJSON(steps.artifact.outputs.artifact-id) }},
-              "url":    ${{ toJSON(steps.artifact.outputs.artifact-url) }},
-              "repo":   ${{ toJSON(github.repository) }},
-              "run_id": ${{ toJSON(github.run_id) }}
-            }
+            "artifact": ${{ toJSON(fromJSON(steps.UPLOAD.outputs.ARTIFACT)) }}
           }          
