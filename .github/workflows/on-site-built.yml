@@ -17,6 +17,8 @@ jobs:
       id: SETUP
       run: |
         echo "SITE_DATA_DIR=${GITHUB_WORKSPACE}/site-data" >> $GITHUB_OUTPUT
+
+        env
         
 #        sudo apt-get install -y libarchive-tools
 
