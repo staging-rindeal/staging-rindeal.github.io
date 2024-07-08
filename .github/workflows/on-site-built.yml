@@ -33,7 +33,6 @@ jobs:
       uses: actions-rindeal/upload-artifact@v4
       with:
         name: ${{ github.event.client_payload.ARTIFACT.NAME }}
-        path: ${{ github.event.client_payload.ARTIFACT.NAME }}.tar
 
     - name: Trigger tests
       uses: peter-evans/repository-dispatch@v3
