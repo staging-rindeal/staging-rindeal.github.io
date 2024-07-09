@@ -21,11 +21,9 @@ jobs:
     - name: Download artifact
       id: DOWNLOAD
       if: github.event_name == 'repository_dispatch'
-      uses: actions/download-artifact@v4
+      uses: actions-rindeal/download-artifact@v4
       with:
-        repository:   ${{ github.event.client_payload.ARTIFACT.WORKFLOW_RUN.REPOSITORY_FULL_NAME }}
-        run-id:       ${{ github.event.client_payload.ARTIFACT.WORKFLOW_RUN.ID }}
-        name:         ${{ github.event.client_payload.ARTIFACT.NAME }}
+        artifact:     ${{ github.event.client_payload.ARTIFACT }}
         github-token: ${{ secrets.CODE_ARTIFACT_TOKEN }}
 
     - name: Upload artifact
