@@ -56,21 +56,9 @@ jobs:
       name: 'github-pages'
       url:  ${{ steps.DEPLOYMENT.outputs.page_url }}
     steps:
-    - name: vardump
-      run: |
-        for t in TEST{1..6}; do
-          echo "$t='${!t}'"
-        done
-      env:
-        TEST1: ${{ needs['ARTIFACT'].outputs['artifact']['name'] }}
-        TEST2: ${{ needs['ARTIFACT'].outputs['artifact'].name }}
-        TEST3: ${{ needs['ARTIFACT'].outputs.artifact['name'] }}
-        TEST4: ${{ needs['ARTIFACT'].outputs.artifact.name }}
-        TEST5: ${{ fromJSON(needs['ARTIFACT'].outputs.artifact)['name'] }}
-        TEST6: ${{ fromJSON(needs['ARTIFACT'].outputs.artifact).name }}
     - name: 'Deploy to GitHub Pages'
       id: 'DEPLOYMENT'
       if: inputs['environment'] == 'staging'
       uses: 'actions/deploy-pages@v4'
       with:
-        artifact_name: ${{ needs['ARTIFACT'].outputs['artifact']['name'] }}
+        artifact_name: ${{ fromJSON(needs['ARTIFACT'].outputs.artifact)['name'] }}
