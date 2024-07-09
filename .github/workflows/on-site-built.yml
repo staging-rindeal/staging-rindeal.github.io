@@ -5,31 +5,31 @@ on:
     types: [ 'site-built' ]
 
 jobs:
-  process-artifact:
+  'MY-JOB':
     runs-on: ubuntu-latest
 
     steps:
     
-    - name: Download artifact
-      id: DOWNLOAD
+    - name: 'Download artifact'
+      id: 'DOWNLOAD'
       uses: actions-rindeal/download-artifact@v4
       with:
-        artifact:     ${{ toJSON(github.event.client_payload.artifact) }}
-        github-token: ${{ secrets.CODE_ARTIFACT_TOKEN }}
+        'artifact':     ${{ toJSON(github.event.client_payload.artifact) }}
+        'github-token': ${{ secrets.CODE_ARTIFACT_TOKEN }}
 
-    - name: Upload artifact
-      id: UPLOAD
+    - name: 'Upload artifact'
+      id: 'UPLOAD'
       uses: actions-rindeal/upload-artifact@v4
       with:
-        name: ${{ github.event.client_payload.ARTIFACT.NAME }}
+        'name': ${{ github.event.client_payload.ARTIFACT.NAME }}
 
-    - name: Trigger tests
+    - name: 'Trigger tests'
       uses: peter-evans/repository-dispatch@v3
       with:
-        token: ${{ secrets.TESTER_DISPATCH_TOKEN }}
-        repository: ${{ vars.TESTER_REPO }}
-        event-type: test-site
-        client-payload: |-
+        'token': ${{ secrets.TESTER_DISPATCH_TOKEN }}
+        'repository': ${{ vars.TESTER_REPO }}
+        'event-type': test-site
+        'client-payload': |-
           {
             "environment": ${{ toJSON(github.event.client_payload.environment) }},
             "artifact": ${{ toJSON(fromJSON(steps.UPLOAD.outputs.ARTIFACT)) }}
