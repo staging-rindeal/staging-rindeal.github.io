@@ -48,23 +48,17 @@ jobs:
   'DEPLOY':
     needs: [ 'ARTIFACT', 'TESTS' ]
     runs-on: ubuntu-latest
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write
-      id-token: write
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
     environment:
       name: 'github-pages'
-      url:  'https://staging-rindeal.github.io/'
+      url:  ${{ steps.DEPLOYMENT.outputs.page_url }}
     steps:
-    - name: 'Download artifact'
-      id: 'DOWNLOAD'
-      uses: 'actions-rindeal/download-artifact@v4'
-      with:
-        'artifact': ${{ needs['ARTIFACT'].outputs['artifact'] }}
-
-    - name: 'Deploy pages'
-      id: 'DEPLOY'
+    - name: 'Deploy to GitHub Pages'
+      id: 'DEPLOYMENT'
       if: inputs['environment'] == 'staging'
-      uses: 'actions/upload-pages-artifact@v3'
+      uses: 'actions/deploy-pages@v4'
       with:
-        name: ${{ needs['ARTIFACT'].outputs['artifact']['name'] }}
-        path: '.'
+        artifact_name: ${{ needs['ARTIFACT'].outputs['artifact']['name'] }}
