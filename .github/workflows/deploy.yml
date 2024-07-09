@@ -15,10 +15,10 @@ jobs:
         'app-id': ${{ vars['GHAPP__TOKGEN__ARTIFACT_PROXY__CONTENTS__RW__APP_ID'] }}
         'private-key': ${{ secrets['GHAPP__TOKGEN__ARTIFACT_PROXY__CONTENTS__RW__PRIVATE_KEY'] }}
 
-    - name: 'Trigger tests'
+    - name: 'Save artifact in a public proxy'
       uses: peter-evans/repository-dispatch@v3
       with:
-        'event-type': 'test-site'
+        'event-type': 'save'
         'repository': ${{ vars['ARTIFACT_PROXY_REPO'] }}
         'client-payload': ${{ github.event.client_payload }}
         'token': ${{ steps.TOKEN.outputs['token'] }}
