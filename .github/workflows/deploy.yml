@@ -1,4 +1,4 @@
-name: 'Handle `site-built` repository dispatch event action'
+name: 'Deploy'
 
 on:
   repository_dispatch:
