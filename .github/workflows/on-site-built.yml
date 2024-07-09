@@ -34,7 +34,7 @@ jobs:
     - name: 'Trigger tests'
       uses: peter-evans/repository-dispatch@v3
       with:
-        'token': ${{ secrets['TESTER_DISPATCH_TOKEN'] }}
-        'repository': ${{ vars['TESTER_REPO'] }}
         'event-type': 'test-site'
+        'repository': ${{ vars['TESTER_REPO'] }}
         'client-payload': ${{ toJSON(needs['ARTIFACT'].outputs) }}
+        'token': ${{ secrets['TESTER_DISPATCH_TOKEN'] }}
