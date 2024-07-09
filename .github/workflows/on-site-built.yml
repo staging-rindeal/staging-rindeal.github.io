@@ -8,7 +8,6 @@ jobs:
   'ARTIFACT':
     runs-on: ubuntu-latest
     steps:
-    
     - name: 'Download artifact'
       id: 'DOWNLOAD'
       uses: actions-rindeal/download-artifact@v4
@@ -30,7 +29,6 @@ jobs:
     needs: 'ARTIFACT'
     runs-on: ubuntu-latest
     steps:
-
     - name: 'Trigger tests'
       uses: peter-evans/repository-dispatch@v3
       with:
