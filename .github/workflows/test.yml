@@ -29,10 +29,11 @@ jobs:
         'artifact':     ${{ github.event.client_payload['artifact'] }}
         'github-token': ${{ needs['ARTIFACT-TOKEN'].outputs['token'] }}
     - name: 'Vardump'
-      run:
-        echo "${GH}" | jq --color-output .
+      run: 'for v in PAYLOAD ARTIFACT GH; do echo "$v:"; jq --color-output . <<< "${!v}"; done'
       env:
-        GH: ${{ toJSON(github) }}
+        'GH': ${{ toJSON(github) }}
+        'PAYLOAD': ${{ toJSON(github.event.client_payload) }}
+        'ARTIFACT': ${{ github.event.client_payload.artifact }}
       
   'TEST-DEPLOY-POST':
     needs: 'ARTIFACT-TOKEN'
@@ -40,7 +41,8 @@ jobs:
     if: github.event.event_type == 'deploy-post'
     steps:
     - name: 'Vardump'
-      run:
-        echo "${GH}" | jq --color-output .
+      run: 'for v in PAYLOAD ARTIFACT GH; do echo "$v:"; jq --color-output . <<< "${!v}"; done'
       env:
-        GH: ${{ toJSON(github) }}
+        'GH': ${{ toJSON(github) }}
+        'PAYLOAD': ${{ toJSON(github.event.client_payload) }}
+        'ARTIFACT': ${{ github.event.client_payload.artifact }}
