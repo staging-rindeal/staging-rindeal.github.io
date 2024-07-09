@@ -5,9 +5,8 @@ on:
     types: [ 'site-built' ]
 
 jobs:
-  'MY-JOB':
+  'ARTIFACT':
     runs-on: ubuntu-latest
-
     steps:
     
     - name: 'Download artifact'
@@ -23,14 +22,20 @@ jobs:
       with:
         'name': ${{ fromJSON(github.event.client_payload['artifact'])['name'] }}
 
+    outputs:
+      'environment': ${{ github.event.client_payload['environment'] }}
+      'artifact':    ${{ steps.UPLOAD.outputs.ARTIFACT }}
+
+  'TESTS':
+    needs: 'ARTIFACT'
+    runs-on: ubuntu-latest
+
+    steps:
+
     - name: 'Trigger tests'
       uses: peter-evans/repository-dispatch@v3
       with:
-        'token': ${{ secrets.TESTER_DISPATCH_TOKEN }}
-        'repository': ${{ vars.TESTER_REPO }}
-        'event-type': test-site
-        'client-payload': |-
-          {
-            "environment": ${{ toJSON(github.event.client_payload.environment) }},
-            "artifact": ${{ toJSON(fromJSON(steps.UPLOAD.outputs.ARTIFACT)) }}
-          }          
+        'token': ${{ secrets['TESTER_DISPATCH_TOKEN'] }}
+        'repository': ${{ vars['TESTER_REPO'] }}
+        'event-type': 'test-site'
+        'client-payload': ${{ toJSON(needs['ARTIFACT'].outputs) }}
