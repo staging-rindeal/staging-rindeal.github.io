@@ -12,9 +12,9 @@ jobs:
       id: 'TOKEN'
       uses: 'actions/create-github-app-token@v1'
       with:
+        'owner': ${{ github.repository_owner }}
         'app-id': ${{ vars['GHAPP__TOKGEN__ARTIFACT_PROXY__CONTENTS__RW__APP_ID'] }}
         'private-key': ${{ secrets['GHAPP__TOKGEN__ARTIFACT_PROXY__CONTENTS__RW__PRIVATE_KEY'] }}
-        'owner': ${{ github.repository_owner }}
 
     - name: 'Save artifact in a public proxy'
       uses: peter-evans/repository-dispatch@v3
