@@ -48,6 +48,12 @@ jobs:
   'DEPLOY':
     needs: [ 'ARTIFACT', 'TESTS' ]
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: 'github-pages'
+      url:  'https://staging-rindeal.github.io/'
     steps:
     - name: 'Download artifact'
       id: 'DOWNLOAD'
@@ -55,7 +61,10 @@ jobs:
       with:
         'artifact': ${{ needs['ARTIFACT'].outputs['artifact'] }}
 
-    - name: 'Foo'
+    - name: 'Deploy pages'
       id: 'DEPLOY'
-      run: |
-        echo Hello World
+      if: inputs['environment'] == 'staging'
+      uses: 'actions/upload-pages-artifact@v3'
+      with:
+        name: ${{ needs['ARTIFACT'].outputs['artifact']['name'] }}
+        path: '.'
