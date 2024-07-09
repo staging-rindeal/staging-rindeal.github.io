@@ -30,7 +30,7 @@ jobs:
       id: 'UPLOAD'
       uses: 'actions-rindeal/upload-artifact@v4'
       with:
-        'name': ${{ fromJSON(github.event.client_payload['artifact'])['name'] }}
+        'name': ${{ fromJSON(inputs['artifact'])['name'] }}
 
     outputs:
       'artifact': ${{ steps.UPLOAD.outputs['artifact'] }}
