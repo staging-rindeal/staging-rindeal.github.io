@@ -20,7 +20,7 @@ jobs:
       with:
         'event-type': 'save'
         'repository': ${{ vars['ARTIFACT_PROXY_REPO'] }}
-        'client-payload': ${{ github.event.client_payload }}
+        'client-payload': ${{ toJSON(github.event.client_payload) }}
         'token': ${{ steps.TOKEN.outputs['token'] }}
 
   'TESTS':
