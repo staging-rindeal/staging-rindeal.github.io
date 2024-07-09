@@ -23,7 +23,7 @@ jobs:
       id: 'DOWNLOAD'
       uses: 'actions-rindeal/download-artifact@v4'
       with:
-        'artifact':     ${{ github.event.client_payload['artifact'] }}
+        'artifact':     ${{ inputs['artifact'] }}
         'github-token': ${{ secrets['CODE_ARTIFACTS_RO_TOKEN'] }}
 
     - name: 'Upload artifact'
