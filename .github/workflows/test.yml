@@ -34,3 +34,13 @@ jobs:
       env:
         GH: ${{ toJSON(github) }}
       
+  'TEST-DEPLOY-POST':
+    needs: 'ARTIFACT-TOKEN'
+    runs-on: ubuntu-latest
+    if: github.event.event_type == 'deploy-post'
+    steps:
+    - name: 'Vardump'
+      run:
+        echo "${GH}" | jq --color-output .
+      env:
+        GH: ${{ toJSON(github) }}
