@@ -8,22 +8,20 @@ jobs:
   'ARTIFACT':
     runs-on: ubuntu-latest
     steps:
-    - name: 'Download artifact'
-      id: 'DOWNLOAD'
-      uses: actions-rindeal/download-artifact@v4
+    - name: 'Generate token'
+      id: 'TOKEN'
+      uses: 'actions/create-github-app-token@v1'
       with:
-        'artifact':     ${{ github.event.client_payload['artifact'] }}
-        'github-token': ${{ secrets['CODE_ARTIFACT_TOKEN'] }}
+        'app-id': ${{ vars['GHAPP__TOKGEN__ARTIFACT_PROXY__CONTENTS__RW__APP_ID'] }}
+        'private-key': ${{ secrets['GHAPP__TOKGEN__ARTIFACT_PROXY__CONTENTS__RW__PRIVATE_KEY'] }}
 
-    - name: 'Upload artifact'
-      id: 'UPLOAD'
-      uses: actions-rindeal/upload-artifact@v4
+    - name: 'Trigger tests'
+      uses: peter-evans/repository-dispatch@v3
       with:
-        'name': ${{ fromJSON(github.event.client_payload['artifact'])['name'] }}
-
-    outputs:
-      'environment': ${{ github.event.client_payload['environment'] }}
-      'artifact':    ${{ steps.UPLOAD.outputs.ARTIFACT }}
+        'event-type': 'test-site'
+        'repository': ${{ vars['ARTIFACT_PROXY_REPO'] }}
+        'client-payload': ${{ github.event.client_payload }}
+        'token': ${{ steps.TOKEN.outputs['token'] }}
 
   'TESTS':
     needs: 'ARTIFACT'
