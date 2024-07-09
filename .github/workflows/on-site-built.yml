@@ -21,7 +21,7 @@ jobs:
       id: 'UPLOAD'
       uses: actions-rindeal/upload-artifact@v4
       with:
-        'name': ${{ github.event.client_payload['artifact']['name'] }}
+        'name': ${{ fromJSON(github.event.client_payload['artifact'])['name'] }}
 
     - name: 'Trigger tests'
       uses: peter-evans/repository-dispatch@v3
