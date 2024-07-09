@@ -2,8 +2,7 @@ name: Site Deployment and Testing
 
 on:
   repository_dispatch:
-    types:
-    - ${{ vars.SITE_BUILT_DISPATCH_TYPE }}
+    types: [ 'site-built' ]
 
 jobs:
   process-artifact:
