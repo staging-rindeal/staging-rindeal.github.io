@@ -29,7 +29,6 @@ jobs:
   'TESTS':
     needs: 'ARTIFACT'
     runs-on: ubuntu-latest
-
     steps:
 
     - name: 'Trigger tests'
