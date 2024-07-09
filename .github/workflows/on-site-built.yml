@@ -15,13 +15,13 @@ jobs:
       uses: actions-rindeal/download-artifact@v4
       with:
         'artifact':     ${{ github.event.client_payload['artifact'] }}
-        'github-token': ${{ secrets.CODE_ARTIFACT_TOKEN }}
+        'github-token': ${{ secrets['CODE_ARTIFACT_TOKEN'] }}
 
     - name: 'Upload artifact'
       id: 'UPLOAD'
       uses: actions-rindeal/upload-artifact@v4
       with:
-        'name': ${{ github.event.client_payload.ARTIFACT.NAME }}
+        'name': ${{ github.event.client_payload['artifact']['name'] }}
 
     - name: 'Trigger tests'
       uses: peter-evans/repository-dispatch@v3
