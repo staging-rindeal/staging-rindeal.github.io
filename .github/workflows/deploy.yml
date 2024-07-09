@@ -2,7 +2,7 @@ name: 'Handle `site-built` repository dispatch event action'
 
 on:
   repository_dispatch:
-    types: [ 'site-built' ]
+    types: [ 'deploy' ]
 
 jobs:
   'ARTIFACT':
