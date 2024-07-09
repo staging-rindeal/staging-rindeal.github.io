@@ -1,0 +1,36 @@
+name: Run tests on staging
+on:
+  repository_dispatch:
+    types: [ 'deploy-pre', 'deploy-post' ]
+
+jobs:
+  'ARTIFACT-TOKEN':
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Generate token'
+      id: 'TOKEN'
+      uses: 'actions/create-github-app-token@v1'
+      with:
+        'app-id': ${{ vars['ARTIFACT_PROXY__DOWNLOADER__APP_ID'] }}
+        'private-key': ${{ secrets['ARTIFACT_PROXY__DOWNLOADER__PRIVATE_KEY'] }}
+    outputs:
+      'token': ${{ steps.TOKEN.outputs['token'] }}
+
+  'TEST-DEPLOY-PRE':
+    needs: 'ARTIFACT-TOKEN'
+    runs-on: ubuntu-latest
+    if: github.event.event_type == 'deploy-pre'
+    steps:
+    - name: 'Download artifact'
+      id: 'DOWNLOAD'
+      if: github.event.event_type == 'deploy-pre'
+      uses: actions-rindeal/download-artifact@v4
+      with:
+        'artifact':     ${{ github.event.client_payload['artifact'] }}
+        'github-token': ${{ needs['ARTIFACT-TOKEN'].outputs['token'] }}
+    - name: 'Vardump'
+      run:
+        echo "${GH}" | jq --color-output .
+      env:
+        GH: ${{ toJSON(github) }}
+      
