@@ -14,7 +14,7 @@ jobs:
       id: 'DOWNLOAD'
       uses: actions-rindeal/download-artifact@v4
       with:
-        'artifact':     ${{ toJSON(github.event.client_payload.artifact) }}
+        'artifact':     ${{ github.event.client_payload['artifact'] }}
         'github-token': ${{ secrets.CODE_ARTIFACT_TOKEN }}
 
     - name: 'Upload artifact'
